@@ -1,0 +1,86 @@
+import DiseaseSelector from "./DiseaseSelector";
+import type { DiseaseDef } from "@/utils/diseaseRegistry";
+
+interface NavBarProps {
+  timeMode: string;
+  onTimeModeChange: (mode: string) => void;
+  disease: DiseaseDef;
+  onDiseaseChange: (d: DiseaseDef) => void;
+  onOpenHealthText: () => void;
+}
+
+const TIME_MODES = ["PAST", "PRESENT"] as const;
+
+export default function NavBar({
+  timeMode,
+  onTimeModeChange,
+  disease,
+  onDiseaseChange,
+  onOpenHealthText,
+}: NavBarProps) {
+  return (
+    <nav
+      className="relative z-30 flex items-center justify-between px-6 py-3"
+      style={{
+        background: "rgba(5,10,20,0.85)",
+        borderBottom: "1px solid #1A2540",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      {/* Brand */}
+      <div className="select-none">
+        <div className="text-lg font-bold tracking-[0.25em] uppercase" style={{ color: "#00FFD1" }}>
+          NIDS
+        </div>
+        <div className="text-[11px] tracking-wide" style={{ color: "rgba(0,255,209,0.5)" }}>
+          NLP Disease Intelligence + Forecasting
+        </div>
+      </div>
+
+      {/* Center - disease selector */}
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] tracking-[0.2em] uppercase" style={{ color: "#E8EDF555" }}>
+          Disease
+        </span>
+        <DiseaseSelector selected={disease} onChange={onDiseaseChange} timeMode={timeMode} />
+      </div>
+
+      {/* Right controls */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={onOpenHealthText}
+          className="px-3 py-1.5 text-xs font-medium tracking-[0.12em] uppercase transition-all duration-200"
+          style={{
+            background: "rgba(0,255,209,0.08)",
+            border: "1px solid #00FFD1",
+            color: "#00FFD1",
+          }}
+        >
+          Analyze Health Text
+        </button>
+
+        <div className="flex gap-0">
+          {TIME_MODES.map((mode) => {
+            const active = timeMode === mode;
+            return (
+              <button
+                key={mode}
+                onClick={() => onTimeModeChange(mode)}
+                className="px-4 py-1.5 text-xs font-medium tracking-[0.1em] uppercase transition-all duration-200"
+                style={{
+                  background: active ? "rgba(0,255,209,0.08)" : "transparent",
+                  border: `1px solid ${active ? "#00FFD1" : "#1A2540"}`,
+                  color: active ? "#00FFD1" : "#E8EDF588",
+                  borderRadius: 0,
+                  marginLeft: "-1px",
+                }}
+              >
+                {mode}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </nav>
+  );
+}
